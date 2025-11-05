@@ -68,7 +68,7 @@ ENV CPLDIR=/opt/conda
 #    --extra-index-url "https://$(cat /run/secrets/OMEGACEN_CREDENTIALS)@pip.entropynaut.com/packages/" \
 #    "commonwise"
 
-RUN pip install jupyter
+RUN pip install pytest jupyter
 
 # TODO: Hardcode specific versions.
 RUN pip install \
