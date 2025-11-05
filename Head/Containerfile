@@ -107,8 +107,25 @@ RUN \
     pip install -e MetisWISE ; \
     pip install -e ScopeSim_Data ;
 
-RUN bash "${HOME}/repos/METIS_Pipeline/toolbox/create_config.sh"; \
-    mkdir -p "${HOME}/.awe"; \
+# Create data directories.
+# These will be mounted over by podman-compose, but having them makes it
+# possible to run the image standalone.
+RUN mkdir -p /root/space/control
+RUN mkdir -p /root/space/EDPS_data
+RUN mkdir -p /root/space/raw
+RUN mkdir -p /root/space/processed
+
+# Create recipe directory that is not actually used, but otherwise
+# pyesorex complains.
+RUN mkdir -p /opt/conda/lib/esopipes-plugins
+
+# Copy configuration.
+RUN mkdir -p "${HOME}/.edps"
+COPY config/DOTedps/application.properties /root/.edps/
+COPY config/DOTedps/logging.yaml /root/.edps/
+COPY config/breakpoints.json /root/.edps/
+
+RUN     mkdir -p "${HOME}/.awe"; \
     ln -s "${HOME}/repos/irdb" "${HOME}/repos/METIS_Simulations/Simulations/inst_pkgs"
 
 COPY scripts/Environment.cfg /root/.awe/Environment.cfg

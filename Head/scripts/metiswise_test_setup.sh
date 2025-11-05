@@ -55,29 +55,23 @@ echo "Can we run recipes?"
 pyesorex --recipes
 
 echo "Starting the edps by listing workflows."
-# Need to start the edps in the right directory, because the workflow_dir
-# is listed as .
-pushd "${HOME}/repos/METIS_Pipeline"
 edps -lw
-popd
 
-echo "Simulating Data."
-
+echo "Preparing simulations."
 pushd "${HOME}/repos/METIS_Simulations/Simulations"
+echo "Create output directory."
 mkdir -p "${HOME}/space/raw"
 # TODO: check whether these links already exist before making them.
-# Link the output directory so the files are on the host.
+echo "Link the output directory so the files are on the host."
 ln -s "${HOME}/space/raw" output || true
-# Link the IRDB so nothing has to be downloaded. (Also done in the Containerfile.)
+echo "Link the IRDB so nothing has to be downloaded."
 ln -s "${HOME}/repos/irdb" inst_pkgs || true
-
-echo "Simulating imgN.py."
-python3 "python/imgN.py"
+echo "Running simulations."
+#python3 "python/imgN.py"
+python3 "python/ifu.py"
 popd
+echo "TODO: Add more simulations."
 
-echo "TODO: Add more simulations; for now just imgN."
-
-echo "Process data."
 echo "Classify data with the EDPS"
 edps -w metis.metis_wkf -i "${HOME}/space/raw" -c
 
@@ -86,13 +80,14 @@ python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/
 
 echo "Process data with the EDPS"
 mkdir -p "${HOME}/space/processed"
-edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed"
+#edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed"
+# TODO: remove target
+edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed" -t metis_ifu_dark
 # TODO: figure out how to move the files.
 
 echo "Ingesting processed data into the archive"
 # TODO: These filenames are not unique at all, so this won't work as intended.
 python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/processed/*/*/*.fits
-# TODO: Most of the files are in /tmp/EDPS_data/METIS/
 
 echo "Stay a while... stay forever!"
 while true; do sleep 60 ; done
