@@ -86,15 +86,15 @@ WORKDIR /root/repos
 
 # Clone all METIS projects
 RUN \
-    git clone https://github.com/AstarVienna/ScopeSim --revision=v0.9.0 ; \
-    git clone https://github.com/AstarVienna/ScopeSim_Templates --revision=0.5.2 ; \
-    git clone https://github.com/AstarVienna/ScopeSim_Data --revision=e5f7216627f9fa34a78e3167fa108104169c644b ; \
-    git clone https://github.com/AstarVienna/irdb --revision=METIS.2025-06-30 ; \
-    git clone https://github.com/AstarVienna/METIS_DRLD --revision=c80343328aa9b4e1950c74d0b3c0390679ff4cbd ; \
-    git clone https://github.com/AstarVienna/METIS_Simulations --revision=v2025.08.15 ; \
-    git clone https://github.com/AstarVienna/METIS_Pipeline --revision=v0.2.2 ; \
+    git clone https://github.com/AstarVienna/ScopeSim --revision=v0.11.1 ; \
+    git clone https://github.com/AstarVienna/ScopeSim_Templates --revision=0.7.0 ; \
+    git clone https://github.com/AstarVienna/ScopeSim_Data --revision=v2025.11.15 ; \
+    git clone https://github.com/AstarVienna/irdb --revision=METIS.2025-10-26 ; \
+    git clone https://github.com/AstarVienna/METIS_DRLD --revision=v2025.11.15 ; \
+    git clone https://github.com/AstarVienna/METIS_Simulations --revision=v2025.11.15 ; \
+    git clone https://github.com/AstarVienna/METIS_Pipeline --revision=v0.2.3 ; \
     git clone https://github.com/AstarVienna/METIS_Pipeline_Test_Data --revision=v2025.02.15 ; \
-    git clone https://github.com/AstarVienna/MetisWISE --revision=f2f68bb46eb4d7dde17dd7baf28f90d0c4a0ab1f ;
+    git clone https://github.com/AstarVienna/MetisWISE --revision=v2025.11.15 ;
 
 # Install all METIS projects.
 # METIS_Simulations / ScopeSim_Templates / ScopeSim should be installed in
