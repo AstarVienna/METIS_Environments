@@ -4,7 +4,7 @@
 # export OMEGACEN_CREDENTIALS=username:password
 #
 # 2) Build the image
-# podman build --secret=id=OMEGACEN_CREDENTIALS,type=env -t metis_stable .
+# podman build --secret=id=OMEGACEN_CREDENTIALS,type=env -t metis_head .
 #
 # 3) Run the image
 # podman run  -it --network=host --volume="/:/hostroot" --volume="${XAUTHORITY:-$HOME/.Xauthority}:/home/metis/.Xauthority:ro"   --env DISPLAY="${DISPLAY}" metiswise
@@ -49,18 +49,26 @@ RUN \
 # Install
 # - cpl: easy from conda
 # - git: newest version allows --revision
-RUN \
+# - common: pip installation is currently broken.
+# - dataserver: to have a local dataserver installation.
+# - psycopg2: because it is necessary for common.
+RUN --mount=type=secret,id=OMEGACEN_CREDENTIALS \
     conda config --add channels conda-forge; \
-    conda install -y cpl git;
+    conda config --add channels omegacen; \
+    conda config --add channels "https://$(cat /run/secrets/OMEGACEN_CREDENTIALS)@conda.astro-wise.org/"; \
+    conda install -y cpl git common dataserver psycopg2;
 
 # Setting CPLDIR is necessary to install pycpl
 ENV CPLDIR=/opt/conda
 
+# TODO: Install common also through pip. Unfortunately it currently does not
+# contain the static files needed for the dbviewer.
+#RUN --mount=type=secret,id=OMEGACEN_CREDENTIALS \
+#    pip install \
+#    --extra-index-url "https://$(cat /run/secrets/OMEGACEN_CREDENTIALS)@pip.entropynaut.com/packages/" \
+#    "commonwise"
 
-RUN --mount=type=secret,id=OMEGACEN_CREDENTIALS \
-    pip install \
-    --extra-index-url "https://$(cat /run/secrets/OMEGACEN_CREDENTIALS)@pip.entropynaut.com/packages/" \
-    "commonwise==2025.8.0a0"
+RUN pip install pytest jupyter
 
 # TODO: Hardcode specific versions.
 RUN pip install \
@@ -78,15 +86,15 @@ WORKDIR /root/repos
 
 # Clone all METIS projects
 RUN \
-    git clone https://github.com/AstarVienna/ScopeSim --revision=v0.9.0 ; \
-    git clone https://github.com/AstarVienna/ScopeSim_Templates --revision=0.5.2 ; \
-    git clone https://github.com/AstarVienna/ScopeSim_Data --revision=e5f7216627f9fa34a78e3167fa108104169c644b ; \
-    git clone https://github.com/AstarVienna/irdb --revision=METIS.2025-06-30 ; \
-    git clone https://github.com/AstarVienna/METIS_DRLD --revision=c80343328aa9b4e1950c74d0b3c0390679ff4cbd ; \
-    git clone https://github.com/AstarVienna/METIS_Simulations --revision=v2025.08.15 ; \
-    git clone https://github.com/AstarVienna/METIS_Pipeline --revision=v0.2.2 ; \
-    git clone https://github.com/AstarVienna/METIS_Pipeline_Test_Data --revision=v2025.02.15 ; \
-    git clone https://github.com/AstarVienna/MetisWISE --revision=f2f68bb46eb4d7dde17dd7baf28f90d0c4a0ab1f ;
+    git clone https://github.com/AstarVienna/ScopeSim ; \
+    git clone https://github.com/AstarVienna/ScopeSim_Templates ; \
+    git clone https://github.com/AstarVienna/ScopeSim_Data ; \
+    git clone https://github.com/AstarVienna/irdb ; \
+    git clone https://github.com/AstarVienna/METIS_DRLD ; \
+    git clone https://github.com/AstarVienna/METIS_Simulations ; \
+    git clone https://github.com/AstarVienna/METIS_Pipeline ; \
+    git clone https://github.com/AstarVienna/METIS_Pipeline_Test_Data ; \
+    git clone https://github.com/AstarVienna/MetisWISE ;
 
 # Install all METIS projects.
 # METIS_Simulations / ScopeSim_Templates / ScopeSim should be installed in
@@ -99,8 +107,28 @@ RUN \
     pip install -e MetisWISE ; \
     pip install -e ScopeSim_Data ;
 
-RUN bash "${HOME}/repos/METIS_Pipeline/toolbox/create_config.sh"; \
+# Create data directories.
+# These will be mounted over by podman-compose, but having them makes it
+# possible to run the image standalone.
+RUN mkdir -p /root/space/control
+RUN mkdir -p /root/space/EDPS_data
+RUN mkdir -p /root/space/raw
+RUN mkdir -p /root/space/processed
+
+# Create recipe directory that is not actually used, but otherwise
+# pyesorex complains.
+RUN mkdir -p /opt/conda/lib/esopipes-plugins
+
+# Copy configuration.
+RUN mkdir -p "${HOME}/.edps"
+COPY config/DOTedps/application.properties /root/.edps/
+COPY config/DOTedps/logging.yaml /root/.edps/
+COPY config/breakpoints.json /root/.edps/
+
+RUN     mkdir -p "${HOME}/.awe"; \
     ln -s "${HOME}/repos/irdb" "${HOME}/repos/METIS_Simulations/Simulations/inst_pkgs"
+
+COPY scripts/Environment.cfg /root/.awe/Environment.cfg
 
 ENV AWETARGET metiswise
 
