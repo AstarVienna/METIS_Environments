@@ -7,7 +7,7 @@
 # podman build --secret=id=OMEGACEN_CREDENTIALS,type=env -t metis_stable .
 #
 # 3) Run the image
-# podman run  -it --network=host --volume="/:/hostroot" --volume="${XAUTHORITY:-$HOME/.Xauthority}:/home/metis/.Xauthority:ro"   --env DISPLAY="${DISPLAY}" metiswise
+# podman-compose up
 
 FROM quay.io/condaforge/miniforge3:25.3.0-3
 # /opt/conda/lib/python3.12 is hardcoded in some (dbviewer) scripts, so update those if necessary.
@@ -56,7 +56,12 @@ RUN --mount=type=secret,id=OMEGACEN_CREDENTIALS \
     conda config --add channels conda-forge; \
     conda config --add channels omegacen; \
     conda config --add channels "https://$(cat /run/secrets/OMEGACEN_CREDENTIALS)@conda.astro-wise.org/"; \
-    conda install -y cpl git common dataserver psycopg2;
+    conda install -y \
+          "cpl==7.3.2" \
+          git \
+          "common==2025.11.1" \
+          "dataserver==2025.11.0" \
+          psycopg2;
 
 # Setting CPLDIR is necessary to install pycpl
 ENV CPLDIR=/opt/conda
@@ -70,13 +75,13 @@ ENV CPLDIR=/opt/conda
 
 RUN pip install pytest jupyter
 
-# TODO: Hardcode specific versions.
+# TODO: Use a lock file so also the dependencies are hardcoded.
 RUN pip install \
     --extra-index-url https://ftp.eso.org/pub/dfs/pipelines/libraries \
-    pycpl \
-    pyesorex \
-    edps \
-    adari_core
+    "pycpl==1.0.3" \
+    "pyesorex==1.0.3" \
+    "edps==1.6.0" \
+    "adari_core==4.1.0"
 
 # Create a directory where to checkout the repositories.
 # This directory can then be mounted over in the development environment.
@@ -85,6 +90,8 @@ WORKDIR /root/repos
 
 
 # Clone all METIS projects
+# Use git clones instead of pip installs because this makes it easier
+# to have the same scripts in both the Stable and the Head Containerfiles.
 RUN \
     git clone https://github.com/AstarVienna/ScopeSim --revision=v0.11.1 ; \
     git clone https://github.com/AstarVienna/ScopeSim_Templates --revision=0.7.0 ; \
