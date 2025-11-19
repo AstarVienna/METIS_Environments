@@ -68,7 +68,9 @@ echo "Link the IRDB so nothing has to be downloaded."
 ln -s "${HOME}/repos/irdb" inst_pkgs || true
 echo "Running simulations."
 #python3 "python/imgN.py"
-python3 "python/ifu.py"
+#python3 "python/ifu.py"
+#python3 "python/testAll.py"
+./runESO.sh
 popd
 echo "TODO: Add more simulations."
 
@@ -87,7 +89,9 @@ edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processe
 
 echo "Ingesting processed data into the archive"
 # TODO: These filenames are not unique at all, so this won't work as intended.
-python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/processed/*/*/*.fits
+# TODO: This is currently broken, it errors out with
+# "Cannot find BADPIX_MAP_GEO."
+#python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/processed/*/*/*.fits
 
 echo "Stay a while... stay forever!"
 while true; do sleep 60 ; done
