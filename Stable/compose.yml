@@ -9,7 +9,7 @@ services:
     volumes:
       - ./space:/root/space
   metis:
-    image: metis_head:latest
+    image: metis_stable:latest
     environment:
       - DISPLAY=${DISPLAY}
     volumes:
@@ -19,7 +19,7 @@ services:
       - "127.0.0.1:8888:8888" # jupyter
     entrypoint: /root/scripts/entrypoint_notebook.sh
   mwsetuptest:
-    image: metis_head:latest
+    image: metis_stable:latest
     environment:
       - DISPLAY=${DISPLAY}
     volumes:
@@ -27,7 +27,7 @@ services:
       - ./scripts:/root/scripts
     entrypoint: /root/scripts/metiswise_test_setup.sh
   dbviewer:
-    image: metis_head:latest
+    image: metis_stable:latest
     ports:
       - "127.0.0.1:8080:8080" # dbviewer
     entrypoint: /root/scripts/entrypoint_dbview_test.sh
@@ -35,7 +35,7 @@ services:
       - ./scripts:/root/scripts
       - ./space:/root/space
   dataserver:
-    image: metis_head:latest
+    image: metis_stable:latest
     ports:
       - "127.0.0.1:8013:8013" # dbviewer
     entrypoint: /root/scripts/entrypoint_dataserver.sh
