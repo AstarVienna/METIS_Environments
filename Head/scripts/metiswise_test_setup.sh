@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Allow ** to match any amount of subdirectories with globstar.
+shopt -s globstar
+
 echo "Executing METIS Pipeline end-to-end tests. Simulation - Pipeline - Archive."
 
 echo "Setup."
@@ -67,10 +70,10 @@ ln -s "${HOME}/space/raw" output || true
 echo "Link the IRDB so nothing has to be downloaded."
 ln -s "${HOME}/repos/irdb" inst_pkgs || true
 echo "Running simulations."
-#python3 "python/imgN.py"
+python3 "python/imgN.py"
 #python3 "python/ifu.py"
 #python3 "python/testAll.py"
-./runESO.sh
+#./runESO.sh
 popd
 echo "TODO: Add more simulations."
 
@@ -78,20 +81,23 @@ echo "Classify data with the EDPS"
 edps -w metis.metis_wkf -i "${HOME}/space/raw" -c
 
 echo "Ingesting raw data into the archive"
-python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/raw/*/*.fits
+# Using find is a bit slow, because of the startup costs.
+#find "${HOME}"/space/raw -name "*.fits" -exec \
+#  python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" {} \;
+python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/raw/**/*.fits
+
 
 echo "Process data with the EDPS"
 mkdir -p "${HOME}/space/processed"
-#edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed"
+edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed"
 # TODO: remove target
-edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed" -t metis_ifu_dark
+#edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed" -t metis_ifu_dark
 # TODO: figure out how to move the files.
 
 echo "Ingesting processed data into the archive"
 # TODO: These filenames are not unique at all, so this won't work as intended.
 # TODO: This is currently broken, it errors out with
-# "Cannot find BADPIX_MAP_GEO."
-#python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/processed/*/*/*.fits
+python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/processed/**/*.fits
 
 echo "Stay a while... stay forever!"
 while true; do sleep 60 ; done
