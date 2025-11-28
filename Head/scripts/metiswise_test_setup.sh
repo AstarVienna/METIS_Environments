@@ -89,15 +89,17 @@ python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/
 
 echo "Process data with the EDPS"
 mkdir -p "${HOME}/space/processed"
-edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed"
-# TODO: remove target
-#edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed" -t metis_ifu_dark
+# Not all files are copied to the output directory.
+#edps -w metis.metis_wkf -m all -i "${HOME}/space/raw" -o "${HOME}/space/processed"
+# TODO: Put -o back once it works properly.
+edps -w metis.metis_wkf -m all -i "${HOME}/space/raw"
 # TODO: figure out how to move the files.
 
 echo "Ingesting processed data into the archive"
 # TODO: These filenames are not unique at all, so this won't work as intended.
-# TODO: This is currently broken, it errors out with
-python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/processed/**/*.fits
+# TODO: Ingest the files in the output directory, once that works again.
+#python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/processed/**/*.fits
+python "${HOME}/repos/MetisWISE/metiswise/tools/ingest_file.py" "${HOME}"/space/EDPS_data/**/*.fits
 
 echo "Stay a while... stay forever!"
 while true; do sleep 60 ; done
