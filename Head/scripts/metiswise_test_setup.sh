@@ -73,7 +73,7 @@ ln -s "${HOME}/space/raw" output || true
 echo "Link the IRDB so nothing has to be downloaded."
 ln -s "${HOME}/repos/irdb" inst_pkgs || true
 echo "Running simulations."
-python3 "python/imgN.py"
+python3 "python/imgLM.py"
 #python3 "python/ifu.py"
 #python3 "python/testAll.py"
 #./runESO.sh
