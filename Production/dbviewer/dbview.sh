@@ -19,6 +19,10 @@
 #    Optional define "AWEVERSION" and "workdir"
 #    To use non default code specify "AWEPIPE" variable
 
+export postgresql_autocommit="True"
+encryption_key="$(/root/bin/create_random_dbviewer_key.py)"
+export encryption_key
+
 export database_tablespacename="pg_default"
 export database_engine="postgresql"
 export database_port="5436"
