@@ -1,5 +1,7 @@
-while [ 1 ]; do
+#!/usr/bin/env bash
+sleep_time=1
+while true; do
   jupyter notebook list | sed -E 's|http://[^:]*:|http://localhost:|; s|\s+::.*$||'
-  sleep 4
+  sleep "$sleep_time"
+  sleep_time=$(( sleep_time * 2 ))
 done
-
