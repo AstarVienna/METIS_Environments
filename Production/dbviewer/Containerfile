@@ -51,6 +51,7 @@ COPY Environment.cfg "/root/.awe/metiswise/"
 COPY dbview.sh "/root/bin/"
 COPY dbview.cfg "/root/bin/"
 COPY entrypoint_dbview.sh "/root/bin/"
+COPY create_random_dbviewer_key.py "/root/bin"
 
 #RUN bash "${HOME}/repos/METIS_Pipeline/toolbox/create_config.sh";
 
