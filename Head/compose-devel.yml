@@ -16,6 +16,7 @@ services:
     volumes:
       - ./space:/root/space
       - ./scripts:/root/scripts
+      - ./config/DOTspextra_cache:/root/.spextra_cache
       - ${DIR_REPOS}:/root/repos
     ports:
       - "127.0.0.1:8888:8888" # jupyter
@@ -27,6 +28,7 @@ services:
     volumes:
       - ./space:/root/space
       - ./scripts:/root/scripts
+      - ./config/DOTspextra_cache:/root/.spextra_cache
       - ${DIR_REPOS}:/root/repos
     entrypoint: /root/scripts/metiswise_test_setup.sh
   dbviewer:
