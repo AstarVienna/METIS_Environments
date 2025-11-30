@@ -16,9 +16,12 @@ fi
 
 echo "Updating Repositories, they can be old in the container image."
 pushd "${HOME}/repos"
-REPODIRS=$(find . -mindepth 1 -maxdepth 1 -type d)
+#REPODIRS=$(find . -mindepth 1 -maxdepth 1 -type d)
+REPODIRS="ScopeSim ScopeSim_Templates ScopeSim_Data irdb METIS_DRLD METIS_Simulations METIS_Pipeline METIS_Pipeline_Test_Data MetisWISE"
 for REPOD in $REPODIRS ; do
-  git -C "${REPOD}" pull
+  # Do not fail; e.g. when the repositories are mounted from the host and
+  # the remotes are over SSH.
+  git -C "${REPOD}" pull || true
 done
 popd
 
