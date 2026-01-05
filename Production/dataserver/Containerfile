@@ -13,10 +13,12 @@ FROM quay.io/condaforge/miniforge3:25.3.0-3
 
 MAINTAINER Hugo Buddelmeijer <hugo@buddelmeijer.nl>
 
+# media-types is necessary to have image/fits in the data server
 RUN \
     apt-get update; \
     apt-get upgrade -y; \
     apt-get install -y \
+        media-types \
         net-tools \
         tmux \
         curl; \
