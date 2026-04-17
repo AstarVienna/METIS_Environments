@@ -138,6 +138,11 @@ ENV AWETARGET metiswise
 ENV PYESOREX_PLUGIN_DIR "/root/repos/METIS_Pipeline/metisp/pyrecipes/"
 ENV PYCPL_RECIPE_DIR "/root/repos/METIS_Pipeline/metisp/pyrecipes/"
 
+ENV DEFAULT_IRDB_LOCATION "/root/repos/irdb/"
+ENV MSIM_YAML_DIR "/root/repos/METIS_Simulations/YAML/ESO"
+ENV MSIM_NCORES "3"
+ENV MSIM_OUTDIR "/root/space/raw/"
+
 # TODO: Ensure that it is not necessary to set the PYTHONPATH at all
 ENV PYTHONPATH "/root/repos/METIS_DRLD:/root/repos/METIS_Pipeline/metisp/pymetis/src/:/root/repos/MetisWISE"
 
