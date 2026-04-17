@@ -127,9 +127,7 @@ COPY config/DOTedps/application.properties /root/.edps/
 COPY config/DOTedps/logging.yaml /root/.edps/
 COPY config/breakpoints.json /root/.edps/
 
-# TODO: This symlink is a broken solution, need to do something better.
-RUN mkdir -p "/root/.awe"; \
-    ln -s "/root/repos/irdb" "/root/repos/METIS_Simulations/metis_simulations/inst_pkgs"
+RUN mkdir -p "/root/.awe"
 
 COPY scripts/Environment.cfg /root/.awe/Environment.cfg
 
