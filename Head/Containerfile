@@ -17,8 +17,17 @@ MAINTAINER Hugo Buddelmeijer <hugo@buddelmeijer.nl>
 # Run-time dependencies:
 # - postgresql: for psql to connect to the database manually
 # - media-types: to have the dataserver return image/fits content-type.
-
+#
 # Build dependencies:
+#
+# For MTR:
+# - xcb
+# - libxkbcommon-dev
+# - libxkbcommon-x11-dev
+# - libxcb-cursor-dev
+# - libxcb-keysyms1-dev
+# - libxcb-icccm4-dev
+# - libxcb-shape0-dev
 #
 # Development dependencies:
 # -
@@ -46,6 +55,8 @@ RUN \
         wcslib-dev wcslib-tools \
         perl cmake \
         graphviz meld \
+        xcb libxkbcommon-dev  libxkbcommon-x11-dev libxcb-cursor-dev \
+        libxcb-keysyms1-dev libxcb-icccm4-dev  libxcb-shape0-dev \
         emacs vim nano;
 
 # Install
@@ -96,6 +107,8 @@ RUN \
     git clone https://github.com/AstarVienna/METIS_Simulations ; \
     git clone https://github.com/AstarVienna/METIS_Pipeline ; \
     git clone https://github.com/AstarVienna/METIS_Pipeline_Test_Data ; \
+    git clone https://github.com/eiseleb47/metis-meta-package ; \
+    git clone https://github.com/AstarVienna/MTR ; \
     git clone https://github.com/AstarVienna/MetisWISE ;
 
 # Install all METIS projects.
