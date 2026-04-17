@@ -122,13 +122,13 @@ RUN mkdir -p /root/space/processed
 RUN mkdir -p /opt/conda/lib/esopipes-plugins
 
 # Copy configuration.
-RUN mkdir -p "${HOME}/.edps"
+RUN mkdir -p "/root/.edps"
 COPY config/DOTedps/application.properties /root/.edps/
 COPY config/DOTedps/logging.yaml /root/.edps/
 COPY config/breakpoints.json /root/.edps/
 
-RUN     mkdir -p "${HOME}/.awe"; \
-    ln -s "${HOME}/repos/irdb" "${HOME}/repos/METIS_Simulations/Simulations/inst_pkgs"
+RUN mkdir -p "/root/.awe"; \
+    ln -s "/root/repos/irdb" "/root/repos/METIS_Simulations/Simulations/inst_pkgs"
 
 COPY scripts/Environment.cfg /root/.awe/Environment.cfg
 
