@@ -134,6 +134,12 @@ RUN mkdir -p /root/space/processed
 # pyesorex complains.
 RUN mkdir -p /opt/conda/lib/esopipes-plugins
 
+# Set MTR configuration
+ENV METIS_META_PKG "/root/repos/metis-meta-package/"
+# For some reason MTR expects METIS_Simulations to exist within its own directory.
+RUN ln -s /root/repos/METIS_Simulations /root/repos/MTR
+
+
 # Copy configuration.
 RUN mkdir -p "/root/.edps"
 COPY config/DOTedps/application.properties /root/.edps/
