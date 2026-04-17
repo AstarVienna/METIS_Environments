@@ -135,7 +135,7 @@ COPY scripts/Environment.cfg /root/.awe/Environment.cfg
 
 ENV AWETARGET metiswise
 
-ENV PYESOREX_PLUGIN_DIR "/root/repos/METIS_Pipeline/metisp/pymetis/src/pymetis/recipes"
+ENV PYESOREX_PLUGIN_DIR "/root/repos/METIS_Pipeline/metisp/pyrecipes/"
 ENV PYCPL_RECIPE_DIR "/root/repos/METIS_Pipeline/metisp/pyrecipes/"
 
 # TODO: Ensure that it is not necessary to set the PYTHONPATH at all
