@@ -70,8 +70,6 @@ mkdir -p "${HOME}/space/raw"
 # TODO: check whether these links already exist before making them.
 echo "Link the output directory so the files are on the host."
 ln -s "${HOME}/space/raw" output || true
-echo "Link the IRDB so nothing has to be downloaded."
-ln -s "${HOME}/repos/irdb" inst_pkgs || true
 echo "Running simulations."
 python3 "simulationBlocks/imgLM.py"
 #python3 "simulationBlocks/ifu.py"
