@@ -18,6 +18,8 @@ services:
       - ./scripts:/root/scripts
       - ./config/DOTspextra_cache:/root/.spextra_cache
       - ${DIR_REPOS}:/root/repos
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+      - /tmp/.X11-unix:/tmp/.X11-unix
     ports:
       - "127.0.0.1:8888:8888" # jupyter
     entrypoint: /root/scripts/entrypoint_notebook.sh

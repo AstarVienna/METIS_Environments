@@ -64,18 +64,15 @@ echo "Starting the edps by listing workflows."
 edps -lw
 
 echo "Preparing simulations."
-pushd "${HOME}/repos/METIS_Simulations/Simulations"
+pushd "${HOME}/repos/METIS_Simulations"
 echo "Create output directory."
 mkdir -p "${HOME}/space/raw"
 # TODO: check whether these links already exist before making them.
 echo "Link the output directory so the files are on the host."
 ln -s "${HOME}/space/raw" output || true
-echo "Link the IRDB so nothing has to be downloaded."
-ln -s "${HOME}/repos/irdb" inst_pkgs || true
 echo "Running simulations."
-python3 "python/imgLM.py"
-#python3 "python/ifu.py"
-#python3 "python/testAll.py"
+python3 "simulationBlocks/imgLM.py"
+#python3 "simulationBlocks/ifu.py"
 #./runESO.sh
 popd
 echo "TODO: Add more simulations."

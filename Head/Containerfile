@@ -17,8 +17,17 @@ MAINTAINER Hugo Buddelmeijer <hugo@buddelmeijer.nl>
 # Run-time dependencies:
 # - postgresql: for psql to connect to the database manually
 # - media-types: to have the dataserver return image/fits content-type.
-
+#
 # Build dependencies:
+#
+# For MTR:
+# - xcb
+# - libxkbcommon-dev
+# - libxkbcommon-x11-dev
+# - libxcb-cursor-dev
+# - libxcb-keysyms1-dev
+# - libxcb-icccm4-dev
+# - libxcb-shape0-dev
 #
 # Development dependencies:
 # -
@@ -46,6 +55,8 @@ RUN \
         wcslib-dev wcslib-tools \
         perl cmake \
         graphviz meld \
+        xcb libxkbcommon-dev  libxkbcommon-x11-dev libxcb-cursor-dev \
+        libxcb-keysyms1-dev libxcb-icccm4-dev  libxcb-shape0-dev \
         emacs vim nano;
 
 # Install
@@ -91,11 +102,14 @@ RUN \
     git clone https://github.com/AstarVienna/ScopeSim ; \
     git clone https://github.com/AstarVienna/ScopeSim_Templates ; \
     git clone https://github.com/AstarVienna/ScopeSim_Data ; \
+    git clone https://github.com/AstarVienna/speXtra ; \
     git clone https://github.com/AstarVienna/irdb ; \
     git clone https://github.com/AstarVienna/METIS_DRLD ; \
     git clone https://github.com/AstarVienna/METIS_Simulations ; \
     git clone https://github.com/AstarVienna/METIS_Pipeline ; \
     git clone https://github.com/AstarVienna/METIS_Pipeline_Test_Data ; \
+    git clone https://github.com/eiseleb47/metis-meta-package ; \
+    git clone https://github.com/AstarVienna/MTR ; \
     git clone https://github.com/AstarVienna/MetisWISE ;
 
 # Install all METIS projects.
@@ -106,6 +120,7 @@ RUN \
     pip install -e METIS_Simulations ; \
     pip install -e ScopeSim_Templates ; \
     pip install -e ScopeSim ; \
+    pip install -e speXtra ; \
     pip install -e MetisWISE ; \
     pip install -e ScopeSim_Data ;
 
@@ -121,21 +136,31 @@ RUN mkdir -p /root/space/processed
 # pyesorex complains.
 RUN mkdir -p /opt/conda/lib/esopipes-plugins
 
+# Set MTR configuration
+ENV METIS_META_PKG "/root/repos/metis-meta-package/"
+# For some reason MTR expects METIS_Simulations to exist within its own directory.
+RUN ln -s /root/repos/METIS_Simulations /root/repos/MTR
+
+
 # Copy configuration.
-RUN mkdir -p "${HOME}/.edps"
+RUN mkdir -p "/root/.edps"
 COPY config/DOTedps/application.properties /root/.edps/
 COPY config/DOTedps/logging.yaml /root/.edps/
 COPY config/breakpoints.json /root/.edps/
 
-RUN     mkdir -p "${HOME}/.awe"; \
-    ln -s "${HOME}/repos/irdb" "${HOME}/repos/METIS_Simulations/Simulations/inst_pkgs"
+RUN mkdir -p "/root/.awe"
 
 COPY scripts/Environment.cfg /root/.awe/Environment.cfg
 
 ENV AWETARGET metiswise
 
-ENV PYESOREX_PLUGIN_DIR "/root/repos/METIS_Pipeline/metisp/pymetis/src/pymetis/recipes"
+ENV PYESOREX_PLUGIN_DIR "/root/repos/METIS_Pipeline/metisp/pyrecipes/"
 ENV PYCPL_RECIPE_DIR "/root/repos/METIS_Pipeline/metisp/pyrecipes/"
+
+ENV DEFAULT_IRDB_LOCATION "/root/repos/irdb/"
+ENV MSIM_YAML_DIR "/root/repos/METIS_Simulations/YAML/ESO"
+ENV MSIM_NCORES "3"
+ENV MSIM_OUTDIR "/root/space/raw/"
 
 # TODO: Ensure that it is not necessary to set the PYTHONPATH at all
 ENV PYTHONPATH "/root/repos/METIS_DRLD:/root/repos/METIS_Pipeline/metisp/pymetis/src/:/root/repos/MetisWISE"
