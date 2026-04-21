@@ -25,11 +25,14 @@ export encryption_key
 
 export database_tablespacename="pg_default"
 export database_engine="postgresql"
-export database_port="5436"
-export database_name="129.125.14.86:5436/pgmetis"
+#export database_name="129.125.14.86:5436/pgmetis"
 export database_user="AWANONYMOUS"
 export database_password="anonymous"
 export ask_administrator_password="True"
+
+# Use test database for now.
+export database_tablespacename="pg_default"
+export project=AITTEST
 
 # 2. Setup the http config file, the config file can be copied from
 #
